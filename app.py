@@ -1,6 +1,7 @@
 import pickle
 import pandas as pd
 import numpy as np
+import os
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -108,6 +109,6 @@ def predict():
         return jsonify({'error': 'An error occurred during prediction.'}), 500
 
 if __name__ == '__main__':
-    # Ensure the app runs on a port that's typically free, e.g., 5000
-    # host='0.0.0.0' makes it accessible from other devices on the network
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Use environment variable for port if available (for production), otherwise use 5000
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)

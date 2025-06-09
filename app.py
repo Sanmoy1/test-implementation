@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/')#home route endpoint
 def home():
     return jsonify({
         'message': 'Welcome to the User Behavior Prediction API',
@@ -36,17 +36,15 @@ try:
         scaler = pickle.load(scaler_file)
 except FileNotFoundError:
     print(f"Error: Ensure '{MODEL_PATH}' and '{SCALER_PATH}' are in the same directory as app.py.")
-    # You might want to exit or raise an exception here depending on desired behavior
+    
     model = None
     scaler = None
 except Exception as e:
-    print(f"Error loading pickle files: {e}")
+    print(f"Error loading pickle files: {e}")#Catch any other exceptions that may occur during loading
     model = None
     scaler = None
 
 # Define the order of features as used during training
-# This was inferred from the notebook: X = df.drop(columns=["User Behavior Class"])
-# after 'Gender' was label encoded and other non-relevant columns were dropped.
 FEATURE_ORDER = [
     'App Usage Time (min/day)',
     'Screen On Time (hours/day)',
@@ -57,7 +55,7 @@ FEATURE_ORDER = [
     'Gender'
 ]
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST'])#prediction endpoint
 def predict():
     if not model or not scaler:
         return jsonify({'error': 'Model or scaler not loaded. Check server logs.'}), 500
@@ -94,10 +92,11 @@ def predict():
         prediction = model.predict(scaled_features)
         
         # The model.predict might return a numpy array, get the first element
-        # Assuming the prediction is a single class label
+        #predicted class is of type numpy.int64
         predicted_class = prediction[0]
+        print(f"Predicted class type: {type(predicted_class)}")  
 
-        # Convert numpy types to native Python types for JSON serialization if necessary
+        # Convert numpy types to native Python types for JSON as Flask jsonify does not handle numpy types well
         if isinstance(predicted_class, np.generic):
             predicted_class = predicted_class.item()
             
@@ -108,7 +107,7 @@ def predict():
         print(f"Error during prediction: {e}")
         return jsonify({'error': 'An error occurred during prediction.'}), 500
 
-if __name__ == '__main__':
-    # Use environment variable for port if available (for production), otherwise use 5000
+if __name__ == '__main__':#when the script is run directly, name is assigned to __main__
+    #use 5000 as default port if PORT environment variable is not set
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

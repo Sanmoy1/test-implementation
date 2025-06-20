@@ -46,13 +46,13 @@ except Exception as e:
 
 # Define the order of features as used during training
 FEATURE_ORDER = [
-    'App Usage Time (min/day)',
-    'Screen On Time (hours/day)',
-    'Battery Drain (mAh/day)',
-    'Number of Apps Installed',
-    'Data Usage (MB/day)',
-    'Age',
-    'Gender'
+    'appUsageTime',
+    'screenOnTime',
+    'batteryDrain',
+    'appsInstalled',
+    'dataUsage',
+    'age',
+    'gender'
 ]
 
 @app.route('/predict', methods=['POST'])#prediction endpoint

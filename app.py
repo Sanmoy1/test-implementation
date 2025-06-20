@@ -14,13 +14,13 @@ def home():
             'endpoint': '/predict',
             'method': 'POST',
             'example_input': {
-                'App Usage Time (min/day)': 250,
-                'Screen On Time (hours/day)': 5.2,
-                'Battery Drain (mAh/day)': 1500,
-                'Number of Apps Installed': 50,
-                'Data Usage (MB/day)': 800,
-                'Age': 28,
-                'Gender': 'Male'
+                'appUsageTime': 250,
+                'screenOnTime': 5.2,
+                'batteryDrain': 1500,
+                'appsInstalled': 50,
+                'dataUsage': 800,
+                'age': 28,
+                'gender': 'Male'
             }
         }
     })
@@ -71,11 +71,11 @@ def predict():
         # Preprocessing
         # 1. Gender Encoding: Assuming 'Male' -> 1, 'Female' -> 0
         # LabelEncoder in scikit-learn assigns alphabetical order, so Female (0), Male (1)
-        if 'Gender' not in input_df.columns:
-            return jsonify({'error': 'Missing feature: Gender'}), 400
+        if 'gender' not in input_df.columns:
+            return jsonify({'error': 'Missing feature: gender'}), 400
         
-        input_df['Gender'] = input_df['Gender'].apply(lambda x: 1 if x.lower() == 'male' else (0 if x.lower() == 'female' else -1))
-        if (input_df['Gender'] == -1).any():
+        input_df['gender'] = input_df['gender'].apply(lambda x: 1 if x.lower() == 'male' else (0 if x.lower() == 'female' else -1))
+        if (input_df['gender'] == -1).any():
             return jsonify({'error': 'Invalid Gender value. Must be "Male" or "Female".'}), 400
 
         # 2. Ensure all features are present and in the correct order

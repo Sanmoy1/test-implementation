@@ -100,7 +100,7 @@ def predict():
         if isinstance(predicted_class, np.generic):
             predicted_class = predicted_class.item()
             
-        return jsonify({'predicted_user_behavior_class': predicted_class})
+        return jsonify({'predictedClass': predicted_class+1})
 
     except Exception as e:
         # Log the exception e for debugging
